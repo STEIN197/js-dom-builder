@@ -28,4 +28,32 @@ function DOMBuilder() {
 	this.getTree = function() {
 		return this.nodes;
 	}
+
+	this.toString = function() {
+		return getMinified(this.nodes);
+	}
+
+	var getMinified = function(data) {
+		var result = "";
+		for (var i in data) {
+			var element = data[i];
+			var tagName = element.tagName.toLowerCase();
+			var attributes = element.attributes
+			var strAttributes = [];
+			for (var i = 0; i < attributes.length; i++) {
+				strAttributes.push(attributes[i].nodeName + "=\"" + attributes[i].value + "\"");
+			}
+			if (strAttributes.length) {
+				strAttributes = " " + strAttributes.join(" ");
+			}
+			result += "<" + tagName + strAttributes + ">";
+			if (element.children.length) {
+				result += getMinified(Array.prototype.slice.call(element.children));
+			} else {
+				result += element.textContent;
+			}
+			result += "</" + tagName + ">";
+		}
+		return result;
+	}
 }
