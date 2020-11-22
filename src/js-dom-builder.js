@@ -11,13 +11,11 @@ function DOMBuilder() {
 			if (typeof content === "function") {
 				var childBuilder = new DOMBuilder();
 				var result = content(childBuilder);
-				if (result === undefined) {
-					var childBuilderNodes = childBuilder.getNodes();
-					for (var i in childBuilderNodes)
-						tag.appendChild(childBuilderNodes[i]);
-				} else {
-					tag.textContent = result;
-				}
+				var childBuilderNodes = childBuilder.getNodes();
+				for (var i in childBuilderNodes)
+					tag.appendChild(childBuilderNodes[i]);
+				if (result !== undefined && result !== null)
+					tag.append(result);
 			} else if (content instanceof DOMBuilder) {
 				var contentNodes = content.getNodes();
 				for (var i in contentNodes)
