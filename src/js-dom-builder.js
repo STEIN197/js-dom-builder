@@ -1,36 +1,41 @@
 function DOMBuilder() {
 
-	this.nodes = [];
+	var nodes = [];
 
 	this.tag = function(tagName, attributes, content) {
 		var tag = document.createElement(tagName);
-		for (var key in attributes)
-			tag.setAttribute(key, attributes[key]);
+		if (attributes)
+			for (var key in attributes)
+				tag.setAttribute(key, attributes[key]);
 		if (content) {
 			if (typeof content === "function") {
 				var childBuilder = new DOMBuilder();
 				var result = content(childBuilder);
 				if (result === undefined) {
-					for (var i in childBuilder.nodes) {
-						tag.appendChild(childBuilder.nodes[i])
-					}
+					var childBuilderNodes = childBuilder.getNodes();
+					for (var i in childBuilderNodes)
+						tag.appendChild(childBuilderNodes[i]);
 				} else {
 					tag.textContent = result;
 				}
+			} else if (content instanceof DOMBuilder) {
+				var contentNodes = content.getNodes();
+				for (var i in contentNodes)
+					tag.appendChild(contentNodes[i]);
 			} else {
 				tag.textContent = content;
 			}
 		}
-		this.nodes.push(tag);
+		nodes.push(tag);
 		return this;
 	}
 
-	this.getTree = function() {
-		return this.nodes;
+	this.getNodes = function() {
+		return nodes;
 	}
 
 	this.toString = function() {
-		return getMinified(this.nodes);
+		return getMinified(nodes);
 	}
 
 	var getMinified = function(data) {
