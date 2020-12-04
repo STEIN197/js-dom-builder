@@ -100,3 +100,5 @@ var builder = new DOMBuilder()
 builder.toString(); // <div>text</div><p>another text</p>
 builder.getNodes(); // [div, p]
 ```
+
+If you don't have any attributes, you can pass the content as the second parameter ([Refer to the v1.1 changelog](CHANGELOG.MD)).

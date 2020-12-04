@@ -2,8 +2,10 @@ function DOMBuilder() {
 
 	var nodes = [];
 
-	this.tag = function(tagName, attributes, content) {
+	this.tag = function(tagName, a, b) {
 		var tag = document.createElement(tagName);
+		var attributes = detectAttributes(a, b);
+		var content = detectContent(a, b);
 		if (attributes)
 			for (var key in attributes)
 				tag.setAttribute(key, attributes[key]);
@@ -58,5 +60,21 @@ function DOMBuilder() {
 			result += "</" + tagName + ">";
 		}
 		return result;
+	}
+
+	var detectContent = function(a, b) {
+		if (a && typeof a !== "object")
+			return a;
+		if (b && typeof b !== "object")
+			return b;
+		return null;
+	}
+
+	var detectAttributes = function(a, b) {
+		if (a && typeof a === "object")
+			return a;
+		if (b && typeof b === "object")
+			return b;
+		return null;
 	}
 }
